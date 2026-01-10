@@ -2,7 +2,7 @@
 while [ true ]; do
     LASTSTATE="run"
     SYRYAL="nothankyou"
-    if [ "$(lsblk -o SERIAL -d | grep '$SYRYAL' --color=never)" == "$SYRYAL" ]; then
+    if [ "$(lsblk -o SERIAL -d | grep $SYRYAL --color=never)" == "$SYRYAL" ]; then
 #        echo "IN"
         if [ $LASTSTATE != "in" ]; then
             loginctl unlock-session 2
