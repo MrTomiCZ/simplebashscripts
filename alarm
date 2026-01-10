@@ -1,0 +1,14 @@
+#!/bin/bash
+if [ "$1" == "" ]; then echo "no argument"; exit; fi
+while [ true ]; do
+  if [ "$(date +%H:%M:%S)" == "$1"":00" ]; then
+   while [ true ]; do
+     echo "ALARM"
+     echo "!!"
+     echo "FFPLAY PLAYING"
+#     echo ^G
+#     ffplay w11-alarm-clock.mp3 -nodisp -autoexit > /dev/null
+     ffplay w11-alarm-clock.mp3 -nodisp -autoexit -loglevel quiet -hide_banner
+   done
+  fi
+done

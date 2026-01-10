@@ -1,0 +1,20 @@
+#!/bin/bash
+clear
+TECKO=0
+while [ true ]; do
+  TECKO=$(( $TECKO + 1 ))
+#  if [ $TECKO == 2 ];then
+    clear
+#  fi
+#  clear
+  LAJNS=$(tput lines)
+  KOLS=$(tput cols)
+  LAJN=$(($LAJNS / 2))
+  KOL=$(($KOLS / 2 - ( ${#STRECHO} / 2 ) ))
+#  STRECHO="bambambambambambambumbambambam"
+  STRECHO="$(date +%H:%M:%S)"
+  tput cup $LAJN $KOL
+  echo $STRECHO
+  tput cup $LAJNS $KOLS
+  sleep 0.5
+done
