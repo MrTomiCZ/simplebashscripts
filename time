@@ -1,17 +1,29 @@
 #!/bin/bash
 clear
 TECKO=0
+cleanup() {
+    tput cnorm
+}
+
+trap cleanup EXIT
+
+tput civis
 while [ true ]; do
   TECKO=$(( $TECKO + 1 ))
 #  if [ $TECKO == 2 ];then
-    clear
+    #clear
 #  fi
 #  clear
+  if (( $TECKO % 5 == 0 ));then
+      clear
+  fi
   LAJNS=$(tput lines)
   KOLS=$(tput cols)
   LAJN=$(($LAJNS / 2))
   KOL=$(($KOLS / 2 - ( ${#STRECHO} / 2 ) ))
 #  STRECHO="bambambambambambambumbambambam"
+  tput cup $LAJN 0
+  printf '\r\033[K'
   STRECHO="$(date +%H:%M:%S)"
   tput cup $LAJN $KOL
   echo $STRECHO
