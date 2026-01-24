@@ -4,11 +4,13 @@ while [ true ]; do
   if [ "$(date +%H:%M:%S)" == "$1"":00" ]; then
    while [ true ]; do
      echo "ALARM"
+     notify-send "ALARM!!"
      echo "!!"
      echo "FFPLAY PLAYING"
 #     echo ^G
 #     ffplay w11-alarm-clock.mp3 -nodisp -autoexit > /dev/null
-     ffplay w11-alarm-clock.mp3 -nodisp -autoexit -loglevel quiet -hide_banner
+#     ffplay w11-alarm-clock.mp3 -nodisp -autoexit -loglevel quiet -hide_banner
+     ffplay -af "volume=3.0" -nodisp -autoexit -loglevel quiet -hide_banner w11-alarm-clock.mp3
    done
   fi
 done
