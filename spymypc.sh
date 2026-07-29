@@ -2,11 +2,21 @@
 URL="https://ntfy.mtmi.eu/mt-cachy-spymypc"
 ACTIVEWIN="$(kdotool getactivewindow getwindowname)"
 TOKEN="no"
-# project settings / envs / m / env secrets
+sendWebhook() {
+    curl -sS "$URL" -d "$2" -H "Title: SpyMyPC: $1" -H "Authorization: Bearer $TOKEN" > /dev/null
+}
+cleanup() {
+    sendWebhook "Stopped" "EXIT signal received: SpyMyPC closed."
+    exit
+}
+trap cleanup EXIT
+
+
+sendWebhook "Started" "SpyMyPC is running at $USER@$HOSTNAME"
 while [ true ]; do
     CURRENTWIN="$(kdotool getactivewindow getwindowname)"
     if [[ "$CURRENTWIN" != "$ACTIVEWIN" && "$CURRENTWIN" != "" ]]; then
-        curl -sS "$URL" -d "$CURRENTWIN" -H "Title: SpyMyPC: Active window changed" -H "Authorization: Bearer $TOKEN" > /dev/null
+        sendWebhook "Active window changed" "$CURRENTWIN"
         ACTIVEWIN="$CURRENTWIN"
     fi
 done
