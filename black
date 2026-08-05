@@ -1,0 +1,15 @@
+#!/bin/bash
+cleanup() {
+    tput cnorm
+    tput reset
+    tput clear
+}
+tput civis
+trap cleanup EXIT
+clear
+tput setab 16
+thing=$(( $(tput lines) * $(tput cols) ))
+printf '%*s' "$thing" ''
+while :; do
+    sleep 1
+done
