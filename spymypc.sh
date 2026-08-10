@@ -23,7 +23,7 @@ sendWebhook() {
 }
 
 cleanup() {
-    printf "\nstopping gimme a sec im killing curl\n" &
+    printf "\n\nstopping wait\n" &
     # Remove trap to prevent recursive loop calls
     trap - EXIT #INT TERM
 
