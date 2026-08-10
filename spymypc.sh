@@ -1,4 +1,16 @@
 #!/bin/bash
+SMP_SOURCE="https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/spymypc.sh"
+SMP_DEPS=('curl' 'less' 'cat' 'diff' 'cmp')
+# deps
+for item in "${SMP_DEPS[@]}"; do
+    #echo "checking if $item"
+    if command -v "$item" >/dev/null 2>&1; then
+        :
+    else
+        toolErr "$item"
+    fi
+done
+
 URLLOC="$HOME/.spymypc.url"
 URL="$(cat "$URLLOC")"
 GETWINCMD="kdotool getactivewindow getwindowname"
@@ -6,17 +18,9 @@ TOKENLOC="$HOME/.spymypc.token"
 TOKEN="$(cat "$TOKENLOC")"
 EMPLOYMENTPID=0
 #GETWMCMD="./getwm.sh"
-SMP_SOURCE="https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/spymypc.sh"
-SMP_DEPS=('curl', 'less', 'cat')
 sendWebhook() {
     curl -sS "$URL" -d "$2" -H "Title: SpyMyPC: $1" -H "Authorization: Bearer $TOKEN" > /dev/null
 }
-: 'cleanup() {
-    sendWebhook "Stopped" "EXIT signal received: SpyMyPC closed." || true
-    kill -9 "$EMPLOYMENTPID" #2>/dev/null
-    wait "$EMPLOYMENTPID" #2>/dev/null
-#    kill -9 "$EMPLOYMENTPID"
-}'
 
 cleanup() {
     printf "\nstopping gimme a sec im killing curl\n" &
@@ -55,15 +59,7 @@ else
     echo "or download bash 4.0 or higher ty"
     exit 1
 fi
-# deps
-for item in "${my_array[@]}"; do
-    #echo "checking if $item"
-    if command -v "$item" >/dev/null 2>&1; then
-        :
-    else
-        toolErr "$item"
-    fi
-done
+
 
 #if [ -f "$GETWMCMD" ]; then
 
