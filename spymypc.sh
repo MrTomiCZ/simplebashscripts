@@ -122,6 +122,7 @@ else
                 echo "Updating"
                 cp /tmp/spymypc.sh "$0.tmp"
                 mv "$0.tmp" "$0"
+                rm /tmp/spymypc.sh
                 exec "$0"
                 break
                 ;;
