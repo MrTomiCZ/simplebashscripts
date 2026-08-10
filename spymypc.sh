@@ -125,6 +125,7 @@ else
                 ;;
             [Nn])
                 echo "alr not updating"
+                rm /tmp/spymypc.sh
                 break
                 ;;
             *)
