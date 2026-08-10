@@ -104,7 +104,11 @@ else
 fi
 
 # Updater
-curl -sS https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/spymypc.sh -o /tmp/spymypc.sh
+curl -fsSL https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/spymypc.sh -o /tmp/spymypc.sh
+if [[ ! -s /tmp/spymypc.sh ]]; then
+    echo "Failed to download update"
+    #exit 1
+fi
 if cmp -s '/tmp/spymypc.sh' "$(readlink -f "$0")"; then
     echo "Up to date"
 else
