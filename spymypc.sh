@@ -116,7 +116,7 @@ else
         case "$answer" in
             [Yy])
                 echo "Updating"
-                cp /tmp/spymypc.sh "$0.tmp"
+                cp --preserve=mode /tmp/spymypc.sh "$0.tmp"
                 mv "$0.tmp" "$0"
                 rm /tmp/spymypc.sh
                 exec "$0"
