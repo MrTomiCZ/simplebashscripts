@@ -65,6 +65,7 @@ gnomeErr() {
     tput setaf 4
     echo "global.context.unsafe_mode = true"
     tput sgr0
+    echo "OR go into $(tput setaf 4)Flags$(tput sgr0) > scroll all the way down > General > $(tput setaf 4)unsafe-mode$(tput sgr0)"
     echo "then enter and esc to exit"
     read -s -p "press enter when you're done"
     echo
