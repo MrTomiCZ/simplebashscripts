@@ -7,7 +7,7 @@ toolErr() {
 }
 SMP_SOURCE="https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/spymypc.sh"
 SMP_FORMATTING="CLASSIC"
-SMP_DEPS=('curl' 'less' 'cat' 'diff' 'cmp' 'tput')
+SMP_DEPS=('curl' 'less' 'cat' 'diff' 'cmp' 'tput' 'sed' 'readlink' 'rm' 'mv' 'cp' 'chmod')
 # deps
 for item in "${SMP_DEPS[@]}"; do
     #echo "checking if $item"
