@@ -1,0 +1,10 @@
+[Unit]
+Description=Attention sound from ntfy.mtmi.eu/critical
+
+[Service]
+Type=simple
+ExecStart=/home/mrtomicz/scripts/critical-svc.sh
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
