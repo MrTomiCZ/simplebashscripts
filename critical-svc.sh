@@ -5,8 +5,14 @@
 # Dependencies: cat, cmp, cp, mv, rm, chmod, curl, coproc (bash >= 4.0), jq
 # Relies on ntfy: docs.ntfy.sh
 
+# journalctl --user -xeu attention-sound.service -- logs
 # nano ~/.config/systemd/user/attention-sound.service -- svc
 # nano ~/scripts/critical-svc.sh -- this
+
+# Enable steps:
+# systemctl --user daemon-reload
+# systemctl --user enable --now attention-sound.service
+# systemctl --user status attention-sound # should say running etc
 
 ATT_URL="$(cat $HOME/.att.url)"
 ATT_TOKEN="$(cat $HOME/.att.token)"
