@@ -19,7 +19,7 @@ ATT_TOKEN="$(cat $HOME/.att.token)"
 ATT_SRC="https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/critical-svc.sh"
 
 ntf() {
-    notify-send --app-name=attention-sound --icon=/usr/share/icons/breeze/status/16/data-warning.svg "$0" "$1"
+    notify-send --app-name=attention-sound --icon=/usr/share/icons/breeze/status/16/data-warning.svg "$1" "$2"
     canberra-gtk-play -f /usr/share/sounds/oxygen/stereo/message-attention.ogg &
 }
 
