@@ -20,7 +20,7 @@ dependencies
 - curl
 - coproc (bash >= 4.0)
 - jq
-- a desktop environment (editable to use wall instead of 
+- a desktop environment (editable to use wall instead of notify-send)
 
 run this inside bash:
 ```bash
@@ -50,9 +50,13 @@ dependencies
 
 > [!IMPORTANT]
 > disable criticalntfy.ps1 in the startup tab of task manager or you'll have
+> 
 > 2 instances of it, 1 hidden & 1 in plain sight. leave critical.bat enabled
+> 
 > the script will automatically open task manager for you and wait for you
+> 
 > to close it then start the crtitical.bat script
+> 
 > RUN THIS INSIDE CMD, NOT POWERSHELL:
 
 ```bat
