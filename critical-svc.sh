@@ -19,12 +19,13 @@ ATT_TOKEN="$(cat $HOME/.att.token)"
 ATT_SRC="https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/critical-svc.sh"
 
 ntf() {
-    notify-send --app-name=attention-sound --icon=/usr/share/icons/breeze/status/16/data-warning.svg --expire-time=5000 "$1" "$2"
+    notify-send --app-name=attention-sound --icon=/usr/share/icons/breeze/status/16/data-warning.svg "$1" "$2"
     canberra-gtk-play -f /usr/share/sounds/oxygen/stereo/message-attention.ogg &
 }
 
 # Updater
 curl -fsSL "$ATT_SRC" -o /tmp/critical-svc.sh
+# cp -- "$(readlink -f "$0")" /tmp/critical-svc.sh # this is just for prototyping for when i'm uh developing
 if [[ ! -s /tmp/critical-svc.sh ]]; then
     echo "Failed to download update"
     ntf "Failed to download update"
@@ -49,19 +50,28 @@ coproc ATTS {
 
 # Main/background work
 while true; do
-    if read -r -t 0.1 json <&"${ATTS[0]}"; then
-        ATT_EVNT=$(jq -r '.event' <<< "$json")
-        if [[ "$ATT_EVNT" == "message" ]]; then
-            ATT_MSG=$(jq -r ".message" <<< "$json")
-            if jq -e 'has("title")' <<< "$json" >/dev/null; then
-                ATT_TTL=$(jq -r ".title" <<< "$json")
-            else
-                ATT_TTL=""
+    if kill -0 "$ATTS_PID" 2>/dev/null; then
+        #echo "FD is ALIVE"
+        if read -r -t 0.1 json <&"${ATTS[0]}"; then
+            ATT_EVNT=$(jq -r '.event' <<< "$json")
+            if [[ "$ATT_EVNT" == "message" ]]; then
+                ATT_MSG=$(jq -r ".message" <<< "$json")
+                if jq -e 'has("title")' <<< "$json" >/dev/null; then
+                    ATT_TTL=$(jq -r ".title" <<< "$json")
+                else
+                    ATT_TTL=""
+                fi
+                ntf "$ATT_TTL" "$ATT_MSG"
             fi
-            ntf "$ATT_TTL" "$ATT_MSG"
         fi
+    else
+        echo "curl is dead"
+        ntf "curl is dead" "please connect to a network & systemctl --user restart attention-sound"
+        sleep 300
+        systemctl --user restart attention-sound
     fi
     sleep 1
 done
 #canberra-gtk-play -f /usr/share/sounds/oxygen/stereo/message-attention.ogg
+
 
