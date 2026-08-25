@@ -17,6 +17,7 @@
 ATT_URL="$(cat $HOME/.att.url)"
 ATT_TOKEN="$(cat $HOME/.att.token)"
 ATT_SRC="https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/critical-svc.sh"
+ATT_REPO="https://github.com/MrTomiCZ/simplebashscripts"
 
 ntf() {
     notify-send --app-name=attention-sound --icon=/usr/share/icons/breeze/status/16/data-warning.svg "$1" "$2"
@@ -66,7 +67,7 @@ while true; do
         fi
     else
         echo "curl is dead"
-        ntf "curl is dead" "please connect to a network & systemctl --user restart attention-sound"
+        ntf "curl is dead" "please connect to a network & systemctl --user restart attention-sound... if that doesn't help create an issue at $ATT_REPO"
         sleep 300
         systemctl --user restart attention-sound
     fi
