@@ -3,7 +3,7 @@ simple bash scripts i use to make things easier
 there might be other scripts here n there but wtv lol
 
 ### *****************************************************
-THE FOLLOWING SECTIONS HAVE NOT BEEN TESTED AND/OR MAY NOT BE COMPLETE!
+THE FOLLOWING SECTIONS HAVE NOT BEEN TESTED AND MAY NOT BE COMPLETE!
 
 CONTINUE AT YOUR OWN RISK
 ### *****************************************************
