@@ -234,5 +234,6 @@ while [ true ]; do
         sendWebhook "Active window changed" "$CURRENTWIN"
         ACTIVEWIN="$CURRENTWIN"
     fi
+	sleep 0.1 # not posix compliant but who gives a fuck (i dont)
 done
 
