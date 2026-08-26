@@ -113,7 +113,7 @@ elif [[ "$XDG_SESSION_TYPE" == "x11" ]];then
     else
         toolErr xdotool
     fi
-elif [[ "$XDG_SESSION_TYPE" == "aqua" ]];then
+elif [[ "$XDG_SESSION_TYPE" == "aqua" || "$OSTYPE" == darwin* ]];then
     echo "MacOS is experimental"
 	echo "$(tput setaf 3)Warning$(tput sgr0): you have to enable Terminal.app in Accessibillity settings (i spelled that wrong) for osascript to work"
 	if command -v osascript >/dev/null 2>&1; then
