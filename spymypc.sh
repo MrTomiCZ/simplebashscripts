@@ -150,6 +150,7 @@ if [[ ! -s /tmp/spymypc.sh ]]; then
 fi
 if cmp -s '/tmp/spymypc.sh' "$(readlink -f "$0")"; then
     echo "Up to date"
+    rm /tmp/spymypc.sh
 else
     diff --color=always '/tmp/spymypc.sh' "$(readlink -f "$0")" | less -R
 
@@ -198,7 +199,7 @@ fi
 sendWebhook "Started" "SpyMyPC is running at $USER@$HOSTNAME on $(uname), PID $$"
 coproc spymypc { exec curl -NsS -H "Authorization: Bearer $TOKEN" "$URL/raw"; }
 EMPLOYMENTPID=$spymypc_PID
-ACTIVEWIN="$($GETWINCMD)"
+ACTIVEWIN="$(eval $GETWINCMD)"
 if [[ "$SMP_FORMATTING" == "GNOME" ]]; then
     # Extract first field (true/false)
     status=$(echo "$ACTIVEWIN" | sed -E 's/^\((true|false),.*/\1/')
@@ -210,7 +211,7 @@ if [[ "$SMP_FORMATTING" == "GNOME" ]]; then
     ACTIVEWIN="$val"
 fi
 while [ true ]; do
-    CURRENTWIN="$($GETWINCMD)"
+    CURRENTWIN="$(eval $GETWINCMD)"
     if [[ "$SMP_FORMATTING" == "GNOME" ]]; then
         # Extract first field (true/false)
         status=$(echo "$CURRENTWIN" | sed -E 's/^\((true|false),.*/\1/')
