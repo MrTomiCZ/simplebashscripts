@@ -10,6 +10,7 @@ SENDNTFY_TOKEN="$(cat $HOME/.sntfy.token)"
 SENDNTFY_SRC="https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/sendntfy.sh"
 SENDNTFY_REPO="https://github.com/MrTomiCZ/simplebashscripts"
 SENDNTFY_CONTENT="$2"
+SENDNTFY_PRIO="$3"
 
 ntf() {
     printf -v MESSAGE '%b' "$2"
@@ -20,8 +21,8 @@ ntf() {
 }
 
 # Updater
-#curl -fsSL "$SENDNTFY_SRC" -o /tmp/sendntfy.sh
-cp -- "$(readlink -f "$0")" /tmp/sendntfy.sh # this is just for prototyping for when i'm uh developing
+curl -fsSL "$SENDNTFY_SRC" -o /tmp/sendntfy.sh
+#cp -- "$(readlink -f "$0")" /tmp/sendntfy.sh # this is just for prototyping for when i'm uh developing
 if [[ ! -s /tmp/sendntfy.sh ]]; then
     echo "Failed to download update"
     ntf "Failed to download update"
@@ -59,9 +60,11 @@ if [[ "$SENDNTFY_CONTENT" == "" ]]; then
     printf "+======================================+"
     tput cup 4 2
     read -rp "> " SENDNTFY_CONTENT
-    tput cup 6 2
-    read -rp "prio> " SENDNTFY_PRIO
-    if [[ $SENDNTFY_URL == "" ]]; then
+    if [[ "$SENDNTFY_PRIO" == "" ]]; then
+        tput cup 6 2
+        read -rp "prio> " SENDNTFY_PRIO
+    fi
+    if [[ "$SENDNTFY_URL" == "" ]]; then
         tput cup 8 2
         read -rp "url> " SENDNTFY_URL
     fi
