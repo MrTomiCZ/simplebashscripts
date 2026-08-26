@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 toolErr() {
     echo "$1 doesn't exist"
     echo "please install or edit source"
