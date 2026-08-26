@@ -62,11 +62,11 @@ if [[ "$SENDNTFY_CONTENT" == "" ]]; then
     read -rp "> " SENDNTFY_CONTENT
     if [[ "$SENDNTFY_PRIO" == "" ]]; then
         tput cup 6 2
-        read -rp "prio> " SENDNTFY_PRIO
+        read -erp "prio> " -i "3" SENDNTFY_PRIO
     fi
     if [[ "$SENDNTFY_URL" == "" ]]; then
         tput cup 8 2
-        read -rp "url> " SENDNTFY_URL
+        read -erp "url> " -i "https://ntfy.sh/" SENDNTFY_URL
     fi
 
     tput clear
