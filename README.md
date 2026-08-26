@@ -2,11 +2,11 @@
 simple bash scripts i use to make things easier
 there might be other scripts here n there but wtv lol
 
-### *****************************************************
-THE FOLLOWING SECTIONS HAVE NOT BEEN TESTED (except windowscmd) AND/OR MAY NOT BE COMPLETE!
+_*****************************************************_
+the following sections may not have been tested,
 
-CONTINUE AT YOUR OWN RISK
-### *****************************************************
+continue at your own risk
+_*****************************************************_
 
 ## critical-svc.sh setup (Linux)
 dependencies
@@ -57,8 +57,14 @@ dependencies
 > the script will automatically open task manager for you and wait for you
 > 
 > to close it then start the crtitical.bat script
+>
+> (yes there are better ways to do this i'm just lazy and also programming in batch & powershell for these kinds of things isnt my superpower)
 > 
 > RUN THIS INSIDE CMD, NOT POWERSHELL:
+
+also, if pasting this inside CMD does not work make a script named attinstaller.bat or .cmd then paste that and doubleclick it
+
+(for the non-tech-savvy / non-power-users lol)
 
 ```bat
 curl -fsSL "https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/criticalntfy.ps1" -o "%appdata%\Microsoft\Windows\Start Menu\Programs\Startup\criticalntfy.ps1"
@@ -77,3 +83,49 @@ start mshta "javascript:alert('Done!');close();"
 ```
 
 if the method above didn't work for you then here's a powershell uhh thing to install it
+**not tested!**
+
+```pwsh
+Add-Type -AssemblyName System.Windows.Forms
+$startup = "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Startup"
+
+Invoke-WebRequest `
+    -Uri "https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/criticalntfy.ps1" `
+    -OutFile "$startup\criticalntfy.ps1"
+
+Invoke-WebRequest `
+    -Uri "https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/critical.bat" `
+    -OutFile "$startup\critical.bat"
+
+@"
+<enter your ntfy token here>
+<example: tk_CNzsdbZYfakcBzl>
+"@ | Set-Content "$env:USERPROFILE\.att.token"
+
+@"
+<enter your ntfy url here>
+<example: https://ntfy.sh/xmNUJYbcHyCC>
+"@ | Set-Content "$env:USERPROFILE\.att.url"
+
+Start-Process notepad.exe -ArgumentList "$env:USERPROFILE\.att.token" -Wait
+Start-Process notepad.exe -ArgumentList "$env:USERPROFILE\.att.url" -Wait
+
+[System.Threading.Thread]::new({
+    [System.Windows.Forms.MessageBox]::Show(
+        "please disable criticalntfy.ps1 in startup apps",
+        ""
+    )
+}).Start()
+Start-Process taskmgr.exe -Wait
+
+Start-Process "$startup\critical.bat" -Wait
+
+Write-Host "Done!"
+
+[System.Threading.Thread]::new({
+    [System.Windows.Forms.MessageBox]::Show(
+        "Done!",
+        ""
+    )
+}).Start()
+```
