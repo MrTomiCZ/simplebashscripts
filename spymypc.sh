@@ -113,6 +113,14 @@ elif [[ "$XDG_SESSION_TYPE" == "x11" ]];then
     else
         toolErr xdotool
     fi
+elif [[ "$XDG_SESSION_TYPE" == "aqua" ]];then
+    echo "MacOS is experimental"
+	echo "$(tput setaf 3)Warning$(tput sgr0): you have to enable Terminal.app in Accessibillity settings (i spelled that wrong) for osascript to work"
+	if command -v osascript >/dev/null 2>&1; then
+	    GETWINCMD="osascript -e 'tell application "System Events" to get name of first process whose frontmost is true'"
+	else
+	    toolErr osascript
+	fi
 else
 # Fallback checks if XDG_SESSION_TYPE is not set
     if [ -n "$WAYLAND_DISPLAY" ]; then
