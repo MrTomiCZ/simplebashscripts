@@ -138,6 +138,7 @@ else
         fi
     else
         echo "Unknown session or DE/WM not supported"
+		exit 1
     fi
 fi
 
