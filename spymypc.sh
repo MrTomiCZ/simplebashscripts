@@ -115,7 +115,7 @@ elif [[ "$XDG_SESSION_TYPE" == "x11" ]];then
     fi
 elif [[ "$XDG_SESSION_TYPE" == "aqua" || "$OSTYPE" == darwin* ]];then
     echo "MacOS is experimental"
-	echo "$(tput setaf 3)Warning$(tput sgr0): you have to enable Terminal.app in Accessibillity settings (i spelled that wrong) for osascript to work"
+	echo "$(tput setaf 3)Warning$(tput sgr0): you have to enable Terminal.app in the Accessibility settings ($(tput setaf 4)Privacy & Security$(tput sgr0) > $(tput setaf 4)Accessibility$(tput sgr0)) for osascript to work"
 	if command -v osascript >/dev/null 2>&1; then
 	    GETWINCMD="osascript -e 'tell application "System Events" to get name of first process whose frontmost is true'"
 	else
