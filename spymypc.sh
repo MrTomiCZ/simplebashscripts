@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+CONFIGLOC="$HOME/.spymypc.conf"
+
 toolErr() {
     echo "$1 doesn't exist"
     echo "please install or edit source"
@@ -18,11 +21,82 @@ for item in "${SMP_DEPS[@]}"; do
     fi
 done
 
-URLLOC="$HOME/.spymypc.url"
-URL="$(cat "$URLLOC")"
 GETWINCMD="kdotool getactivewindow getwindowname"
-TOKENLOC="$HOME/.spymypc.token"
-TOKEN="$(cat "$TOKENLOC")"
+OLDTOKENLOC="$HOME/.spymypc.token"
+OLDURLLOC="$HOME/.spymypc.url"
+
+oldConfigMigration() {
+    # Create backup in temp
+    local tmp_dir="${TMPDIR:-/tmp}/spymypc_backup_$(date +%s)"
+    mkdir -p "$tmp_dir"
+    if ! cp "$OLDTOKENLOC" "$OLDURLLOC" "$tmp_dir/" 2>/dev/null; then
+        echo "Warning: Failed to back up old configuration files to $tmp_dir." >&2
+        read -p "Do you want to continue migration without backup? [y/N] " continue_yn
+        case "$continue_yn" in
+            [Yy]*) ;;
+            *) echo "Migration aborted."; return 1 ;;
+        esac
+    else
+        echo "Backup created at: $tmp_dir"
+    fi
+    
+    # migrate
+    local token_old_val=""
+    local url_old_val=""
+    [[ -f "$OLDTOKENLOC" ]] && token_old_val=$(tr -d '\r\n' < "$OLDTOKENLOC")
+    [[ -f "$OLDURLLOC" ]] && url_old_val=$(tr -d '\r\n' < "$OLDURLLOC")
+    
+    # IMPORTANT, DO NOT USE INDITATION (IDK HOW TO SPELL) DOWN HERE
+    cat <<EOF > "$CONFIGLOC"
+TOKEN=$token_old_val
+URL=$url_old_val
+EOF
+
+    rm -f "$OLDTOKENLOC" "$OLDURLLOC"
+    echo "Migration complete."
+}
+
+if [[ -f "$OLDTOKENLOC" && -f "$OLDURLLOC" ]]; then
+    read -p "Old config system was found, would you like to automatically update it? [y/n] " updateoldconfigyn
+    while [[ true ]]; do
+    case "$updateoldconfigyn" in
+        [Yy]) 
+            oldConfigMigration
+            break
+            ;;
+        [Nn]) 
+            echo "Not auto updating."
+            break
+            ;;
+        *) 
+            echo "invalid"
+            ;;
+    esac
+done
+fi
+
+
+# Create new config if doesn't already exists
+if [[ ! -f "$CONFIGLOC" ]]; then
+    cat <<EOF > "$CONFIGLOC"
+TOKEN=
+URL=
+EOF
+    echo "Config file not found. Created template at $CONFIGLOC, please insert your token and url there." >&2
+    exit 1
+fi
+
+# Load config
+declare -A config
+while IFS='=' read -r key value || [ -n "$key" ]; do
+    [[ -z "$key" || "$key" =~ ^[[:space:]]*# ]] && continue
+    config["$key"]="$(echo "$value" | tr -d '\r')"
+done < $CONFIGLOC
+
+URL="${config[URL]}"
+TOKEN="${config[TOKEN]}"
+
+
 EMPLOYMENTPID=0
 #GETWMCMD="./getwm.sh"
 sendWebhook() {
