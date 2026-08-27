@@ -33,7 +33,7 @@ oldConfigMigration() {
     mkdir -p "$tmp_dir"
     if ! cp "$OLDTOKENLOC" "$OLDURLLOC" "$tmp_dir/" 2>/dev/null; then
         echo "Warning: Failed to back up old configuration files to $tmp_dir." >&2
-        read -p "Do you want to continue migration without backup? [y/N] " continue_yn
+        read -p "Continue the migration without a backup? [yN] " continue_yn
         case "$continue_yn" in
             [Yy]*) ;;
             *) echo "Migration aborted."; return 1 ;;
@@ -59,7 +59,7 @@ EOF
 }
 
 if [[ -f "$OLDTOKENLOC" || -f "$OLDURLLOC" ]]; then
-    read -p "Old config system was found, would you like to migrate? [y/] " updateoldconfigyn
+    read -p "Old config system was found, would you like to migrate? [yn] " updateoldconfigyn
     while [[ true ]]; do
     case "$updateoldconfigyn" in
         [Yy]) 
