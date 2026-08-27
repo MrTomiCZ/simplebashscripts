@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+
+CONFIGLOC="$HOME/.spymypc.conf"
+
 toolErr() {
     echo "$1 doesn't exist"
     echo "please install or edit source"
@@ -18,11 +21,29 @@ for item in "${SMP_DEPS[@]}"; do
     fi
 done
 
-URLLOC="$HOME/.spymypc.url"
-URL="$(cat "$URLLOC")"
 GETWINCMD="kdotool getactivewindow getwindowname"
-TOKENLOC="$HOME/.spymypc.token"
-TOKEN="$(cat "$TOKENLOC")"
+
+# Create new config if doesn't already exists
+if [[ ! -f "$CONFIGLOC" ]]; then
+    cat <<EOF > "$CONFIGLOC"
+TOKEN=
+URL=
+EOF
+    echo "Config file not found. Created template at $CONFIGLOC, please insert your token and url there." >&2
+    exit 1
+fi
+
+# Load config
+declare -A config
+while IFS='=' read -r key value || [ -n "$key" ]; do
+    [[ -z "$key" || "$key" =~ ^[[:space:]]*# ]] && continue
+    config["$key"]="$(echo "$value" | tr -d '\r')"
+done < $CONFIGLOC
+
+URL="${config[URL]}"
+TOKEN="${config[TOKEN]}"
+
+
 EMPLOYMENTPID=0
 #GETWMCMD="./getwm.sh"
 sendWebhook() {
