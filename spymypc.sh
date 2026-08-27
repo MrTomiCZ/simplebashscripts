@@ -223,16 +223,18 @@ else
 fi
 
 # Updater
-curl -fsSL https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/spymypc.sh -o $TEMP/spymypc.sh
-if [[ ! -s $TEMP/spymypc.sh ]]; then
+TEMPFILE="${TMPDIR:-/tmp}/spymypc.sh"
+CURRFILE="$(readlink -f "$0")"
+curl -fsSL https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/spymypc.sh -o "$TEMPFILE"
+if [[ ! -s "$TEMPFILE" ]]; then
     echo "Failed to download update"
-    rm /tmp/spymypc.sh
+    rm "$TEMPFILE"
 fi
-if cmp -s '$TEMP/spymypc.sh' "$(readlink -f "$0")"; then
+if cmp -s "$TEMPFILE" "$CURRFILE"; then
     echo "Up to date"
-    rm /tmp/spymypc.sh
+    rm "$TEMPFILE"
 else
-    diff --color=always '$TEMP/spymypc.sh' "$(readlink -f "$0")" | less -R
+    diff --color=always "$TEMPFILE" "$CURRFILE" | less -R
 
     while true; do
         read -p "Update? [yn] " answer
@@ -240,16 +242,16 @@ else
         case "$answer" in
             [Yy])
                 echo "Updating"
-                cp $TEMP/spymypc.sh "$0.tmp" &&
-                chmod +x "$0.tmp" &&
-                mv "$0.tmp" "$0" &&
-                rm $TEMP/spymypc.sh &&
-                exec "$0"
+                cp "$TEMPFILE" "$CURRFILE.tmp" &&
+                chmod +x "$CURRFILE.tmp" &&
+                mv "$CURRFILE.tmp" "$CURRFILE" &&
+                rm "$TEMPFILE" &&
+                exec "$CURRFILE" $*
                 break
                 ;;
             [Nn])
                 echo "alr not updating"
-                rm $TEMP/spymypc.sh
+                rm "$TEMPFILE"
                 break
                 ;;
             *)
