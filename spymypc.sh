@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Todo: rewrite this to look & work better lol
+
 CONFIGLOC="$HOME/.spymypc.conf"
 
 toolErr() {
@@ -56,8 +58,8 @@ EOF
     echo "Migration complete."
 }
 
-if [[ -f "$OLDTOKENLOC" && -f "$OLDURLLOC" ]]; then
-    read -p "Old config system was found, would you like to automatically update it? [y/n] " updateoldconfigyn
+if [[ -f "$OLDTOKENLOC" || -f "$OLDURLLOC" ]]; then
+    read -p "Old config system was found, would you like to migrate? [y/] " updateoldconfigyn
     while [[ true ]]; do
     case "$updateoldconfigyn" in
         [Yy]) 
@@ -66,6 +68,9 @@ if [[ -f "$OLDTOKENLOC" && -f "$OLDURLLOC" ]]; then
             ;;
         [Nn]) 
             echo "Not auto updating."
+			echo "Use of old config was deleted"
+			echo "and i'm lazy to bring it back lol"
+			echo "it will be in a future update dw"
             break
             ;;
         *) 
@@ -82,7 +87,7 @@ if [[ ! -f "$CONFIGLOC" ]]; then
 TOKEN=
 URL=
 EOF
-    echo "Config file not found. Created template at $CONFIGLOC, please insert your token and url there." >&2
+    echo "Config file not found. Created template at $CONFIGLOC, please insert your own token (optional) and URL." >&2
     exit 1
 fi
 
@@ -218,16 +223,16 @@ else
 fi
 
 # Updater
-curl -fsSL https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/spymypc.sh -o /tmp/spymypc.sh
-if [[ ! -s /tmp/spymypc.sh ]]; then
+curl -fsSL https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/spymypc.sh -o $TEMP/spymypc.sh
+if [[ ! -s $TEMP/spymypc.sh ]]; then
     echo "Failed to download update"
     rm /tmp/spymypc.sh
 fi
-if cmp -s '/tmp/spymypc.sh' "$(readlink -f "$0")"; then
+if cmp -s '$TEMP/spymypc.sh' "$(readlink -f "$0")"; then
     echo "Up to date"
     rm /tmp/spymypc.sh
 else
-    diff --color=always '/tmp/spymypc.sh' "$(readlink -f "$0")" | less -R
+    diff --color=always '$TEMP/spymypc.sh' "$(readlink -f "$0")" | less -R
 
     while true; do
         read -p "Update? [yn] " answer
@@ -235,16 +240,16 @@ else
         case "$answer" in
             [Yy])
                 echo "Updating"
-                cp /tmp/spymypc.sh "$0.tmp" &&
+                cp $TEMP/spymypc.sh "$0.tmp" &&
                 chmod +x "$0.tmp" &&
                 mv "$0.tmp" "$0" &&
-                rm /tmp/spymypc.sh &&
+                rm $TEMP/spymypc.sh &&
                 exec "$0"
                 break
                 ;;
             [Nn])
                 echo "alr not updating"
-                rm /tmp/spymypc.sh
+                rm $TEMP/spymypc.sh
                 break
                 ;;
             *)
