@@ -22,6 +22,59 @@ for item in "${SMP_DEPS[@]}"; do
 done
 
 GETWINCMD="kdotool getactivewindow getwindowname"
+OLDTOKENLOC="$HOME/.spymypc.token"
+OLDURLLOC="$HOME/.spymypc.url"
+
+oldConfigMigration() {
+    # Create backup in temp
+    local tmp_dir="${TMPDIR:-/tmp}/spymypc_backup_$(date +%s)"
+    mkdir -p "$tmp_dir"
+    if ! cp "$OLDTOKENLOC" "$OLDURLLOC" "$tmp_dir/" 2>/dev/null; then
+        echo "Warning: Failed to back up old configuration files to $tmp_dir." >&2
+        read -p "Do you want to continue migration without backup? [y/N] " continue_yn
+        case "$continue_yn" in
+            [Yy]*) ;;
+            *) echo "Migration aborted."; return 1 ;;
+        esac
+    else
+        echo "Backup created at: $tmp_dir"
+    fi
+    
+    # migrate
+    local token_old_val=""
+    local url_old_val=""
+    [[ -f "$OLDTOKENLOC" ]] && token_old_val=$(tr -d '\r\n' < "$OLDTOKENLOC")
+    [[ -f "$OLDURLLOC" ]] && url_old_val=$(tr -d '\r\n' < "$OLDURLLOC")
+    
+    # IMPORTANT, DO NOT USE INDITATION (IDK HOW TO SPELL) DOWN HERE
+    cat <<EOF > "$CONFIGLOC"
+TOKEN=$token_old_val
+URL=$url_old_val
+EOF
+
+    rm -f "$OLDTOKENLOC" "$OLDURLLOC"
+    echo "Migration complete."
+}
+
+if [[ -f "$OLDTOKENLOC" && -f "$OLDURLLOC" ]]; then
+    read -p "Old config system was found, would you like to automatically update it? [y/n] " updateoldconfigyn
+    while [[ true ]]; do
+    case "$updateoldconfigyn" in
+        [Yy]) 
+            oldConfigMigration
+            break
+            ;;
+        [Nn]) 
+            echo "Not auto updating."
+            break
+            ;;
+        *) 
+            echo "invalid"
+            ;;
+    esac
+done
+fi
+
 
 # Create new config if doesn't already exists
 if [[ ! -f "$CONFIGLOC" ]]; then
