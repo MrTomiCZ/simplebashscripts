@@ -9,9 +9,11 @@ there might be other scripts here n there but wtv lol
 > ---
 
 # Critical ntfy
-- [Installation instructions](./docs/critical.md)
+- [Installation instructions for Linux](./docs/critical_linux.md)
+- [Installation instructions for Windows](./docs/critical_windows.md)
 
 # Spymypc.sh
-- Tested on MacOS 26, Some linux distros (not all DE enviroments) 
-- Works using ntfy, sends information about window changes to your ntfy.
-- [Installation instructions](./docs/spymypc.md)
+- Tested on MacOS 26, some linux distros (not all DEs) 
+- Works using ntfy, sends information about window name changes to your ntfy topic.
+- [Installation instructions for MacOS & Linux](./docs/spymypc.md)
+- [Installation instructions for Windows](./docs/spymypc_windows.md)
