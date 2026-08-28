@@ -1,6 +1,14 @@
 # Spymypc.sh
-dependencies:
+## Dependencies:
+- Bash 4.0 or higher
+- cat chmod cmp cp curl date diff less mkdir mv readlink rm sed tput tr
+Dependencies per OS:
+- KDE (Wayland): kdotool
+- GNOME (Wayland): gdbus
+- X11 (Linux): xdotool
+- macOS: osascript (built into macOS, requires Terminal accessibility permissions)
 
+## Installation
 Open terminal and run this:
 ```bash
 curl -O https://raw.githubusercontent.com/MrTomiCZ/simplebashscripts/refs/heads/main/spymypc.sh
