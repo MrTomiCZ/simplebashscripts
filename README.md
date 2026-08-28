@@ -8,5 +8,10 @@ there might be other scripts here n there but wtv lol
 >
 > ---
 
-# Critical service
+# Critical ntfy
 - [Installation instructions](./docs/critical.md)
+
+# Spymypc.sh
+- Tested on MacOS 26, Linux (not all DE enviroments) 
+- Works using ntfy, sends information about window changes to your ntfy.
+- [Installation instructions](./docs/spymypc.md)
