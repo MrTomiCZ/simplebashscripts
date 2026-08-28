@@ -31,7 +31,12 @@ oldConfigMigration() {
     # Create backup in temp
     local tmp_dir="${TMPDIR:-/tmp}/spymypc_backup_$(date +%s)"
     mkdir -p "$tmp_dir"
-    if ! cp "$OLDTOKENLOC" "$OLDURLLOC" "$tmp_dir/" 2>/dev/null; then
+    local backup_failed=false
+    
+    [[ -f "$OLDTOKENLOC" ]] && ! cp "$OLDTOKENLOC" "$tmp_dir/" && backup_failed=true
+    [[ -f "$OLDURLLOC" ]] && ! cp "$OLDURLLOC" "$tmp_dir/" && backup_failed=true
+    
+    if $backup_failed; then
         echo "Warning: Failed to back up old configuration files to $tmp_dir." >&2
         read -p "Continue the migration without a backup? [yN] " continue_yn
         case "$continue_yn" in
@@ -47,8 +52,7 @@ oldConfigMigration() {
     local url_old_val=""
     [[ -f "$OLDTOKENLOC" ]] && token_old_val=$(tr -d '\r\n' < "$OLDTOKENLOC")
     [[ -f "$OLDURLLOC" ]] && url_old_val=$(tr -d '\r\n' < "$OLDURLLOC")
-    
-    # IMPORTANT, DO NOT USE INDITATION (IDK HOW TO SPELL) DOWN HERE
+    # IMPORTANT, DO NOT USE INDITATION (IDK HOW TO SPELL) DOWN HERE 
     cat <<EOF > "$CONFIGLOC"
 TOKEN=$token_old_val
 URL=$url_old_val
@@ -58,7 +62,13 @@ EOF
     echo "Migration complete."
 }
 
-if [[ -f "$OLDTOKENLOC" || -f "$OLDURLLOC" ]]; then
+USING_OLD_CONFIG=false
+if [[ -f "$OLDTOKENLOC" || -f "$OLDURLLOC" ]] && [[ -f "$CONFIGLOC" ]]; then
+    # Use of both configs detected.
+    echo "Warning: Both new ($CONFIGLOC) and old config files were found." >&2
+    echo "Ignoring old config files. You can safely delete .spymypc.token and .spymypc.url." >&2
+
+elif [[ -f "$OLDTOKENLOC" || -f "$OLDURLLOC" ]]; then
     read -p "Old config system was found, would you like to migrate? [yn] " updateoldconfigyn
     while [[ true ]]; do
     case "$updateoldconfigyn" in
@@ -68,9 +78,10 @@ if [[ -f "$OLDTOKENLOC" || -f "$OLDURLLOC" ]]; then
             ;;
         [Nn]) 
             echo "Not auto updating."
-			echo "Use of old config was deleted"
-			echo "and i'm lazy to bring it back lol"
-			echo "it will be in a future update dw"
+            echo "Falling back to use of old config system".
+            [[ -f "$OLDTOKENLOC" ]] && TOKEN=$(cat "$OLDTOKENLOC")
+            [[ -f "$OLDURLLOC" ]] && URL=$(cat "$OLDURLLOC")
+            USING_OLD_CONFIG=true
             break
             ;;
         *) 
@@ -82,7 +93,7 @@ fi
 
 
 # Create new config if doesn't already exists
-if [[ ! -f "$CONFIGLOC" ]]; then
+if [[ ! -f "$CONFIGLOC" && "$USING_OLD_CONFIG" == false ]]; then
     cat <<EOF > "$CONFIGLOC"
 TOKEN=
 URL=
@@ -91,6 +102,7 @@ EOF
     exit 1
 fi
 
+if [[ "$USING_OLD_CONFIG" == false ]]; then
 # Load config
 declare -A config
 while IFS='=' read -r key value || [ -n "$key" ]; do
@@ -100,7 +112,12 @@ done < $CONFIGLOC
 
 URL="${config[URL]}"
 TOKEN="${config[TOKEN]}"
+fi
 
+if [[ -z "$URL" ]]; then
+    echo "Error: No URL provided in config." >&2
+    exit 1
+fi
 
 EMPLOYMENTPID=0
 #GETWMCMD="./getwm.sh"
