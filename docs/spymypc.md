@@ -2,6 +2,7 @@
 ## Dependencies:
 - Bash 4.0 or higher
 - cat chmod cmp cp curl date diff less mkdir mv readlink rm sed tput tr
+
 Dependencies per OS:
 - KDE (Wayland): kdotool
 - GNOME (Wayland): gdbus
