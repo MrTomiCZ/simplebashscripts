@@ -7,3 +7,6 @@ there might be other scripts here n there but wtv lol
 > **Continue at your own risk.**
 >
 > ---
+
+# Critical service
+- [Installation instructions](./docs/critical.md)
