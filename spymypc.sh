@@ -52,7 +52,7 @@ oldConfigMigration() {
     local url_old_val=""
     [[ -f "$OLDTOKENLOC" ]] && token_old_val=$(tr -d '\r\n' < "$OLDTOKENLOC")
     [[ -f "$OLDURLLOC" ]] && url_old_val=$(tr -d '\r\n' < "$OLDURLLOC")
-    
+    # IMPORTANT, DO NOT USE INDITATION (IDK HOW TO SPELL) DOWN HERE 
     cat <<EOF > "$CONFIGLOC"
 TOKEN=$token_old_val
 URL=$url_old_val
