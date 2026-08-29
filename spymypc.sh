@@ -2,7 +2,16 @@
 
 # Todo: rewrite this to look & work better lol
 
+# --- CONFIG VARIABLES ---
 CONFIGLOC="$HOME/.spymypc.conf"
+OLDTOKENLOC="$HOME/.spymypc.token"
+OLDURLLOC="$HOME/.spymypc.url"
+# ------------------------
+
+SMP_SOURCE="https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/spymypc.sh"
+SMP_FORMATTING="CLASSIC"
+SMP_DEPS=('curl' 'less' 'cat' 'diff' 'cmp' 'tput' 'sed' 'readlink' 'rm' 'mv' 'cp' 'chmod' 'tr' 'mkdir' 'date')
+GETWINCMD="kdotool getactivewindow getwindowname"
 
 toolErr() {
     echo "$1 doesn't exist"
@@ -10,10 +19,18 @@ toolErr() {
     echo "to use a tool of your choice"
     exit 1
 }
-SMP_SOURCE="https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/spymypc.sh"
-SMP_FORMATTING="CLASSIC"
-SMP_DEPS=('curl' 'less' 'cat' 'diff' 'cmp' 'tput' 'sed' 'readlink' 'rm' 'mv' 'cp' 'chmod' 'tr' 'mkdir' 'date')
-# deps
+
+# Check for bash version
+if (( BASH_VERSINFO[0] >= 4 )); then
+    :
+else
+    echo "you do not meet the necessary requirements for"
+    echo "receiving commands so either implement it yourself lol"
+    echo "or download bash 4.0 or higher ty"
+    exit 1
+fi
+
+# Check for dependencies
 for item in "${SMP_DEPS[@]}"; do
     #echo "checking if $item"
     if command -v "$item" >/dev/null 2>&1; then
@@ -23,9 +40,7 @@ for item in "${SMP_DEPS[@]}"; do
     fi
 done
 
-GETWINCMD="kdotool getactivewindow getwindowname"
-OLDTOKENLOC="$HOME/.spymypc.token"
-OLDURLLOC="$HOME/.spymypc.url"
+
 
 oldConfigMigration() {
     # Create backup in temp
@@ -47,12 +62,12 @@ oldConfigMigration() {
         echo "Backup created at: $tmp_dir"
     fi
     
-    # migrate
     local token_old_val=""
     local url_old_val=""
     [[ -f "$OLDTOKENLOC" ]] && token_old_val=$(tr -d '\r\n' < "$OLDTOKENLOC")
-    [[ -f "$OLDURLLOC" ]] && url_old_val=$(tr -d '\r\n' < "$OLDURLLOC")
-    # IMPORTANT, DO NOT USE INDITATION (IDK HOW TO SPELL) DOWN HERE 
+    [[ -f "$OLDURLLOC" ]] && url_old_val=$(tr -d '\r\n' < "$OLDURLLOC"))
+
+    # IMPORTANT, DO NOT USE INDITATION (IDK HOW TO SPELL) DOWN HERE
     cat <<EOF > "$CONFIGLOC"
 TOKEN=$token_old_val
 URL=$url_old_val
@@ -62,6 +77,7 @@ EOF
     echo "Migration complete."
 }
 
+# Check for use of old or new config.
 USING_OLD_CONFIG=false
 if [[ -f "$OLDTOKENLOC" || -f "$OLDURLLOC" ]] && [[ -f "$CONFIGLOC" ]]; then
     # Use of both configs detected.
@@ -102,18 +118,19 @@ EOF
     exit 1
 fi
 
+# If we aren't using old config system, load $CONFIGLOC
 if [[ "$USING_OLD_CONFIG" == false ]]; then
-# Load config
-declare -A config
-while IFS='=' read -r key value || [ -n "$key" ]; do
-    [[ -z "$key" || "$key" =~ ^[[:space:]]*# ]] && continue
-    config["$key"]="$(echo "$value" | tr -d '\r')"
-done < $CONFIGLOC
+    declare -A config
+    while IFS='=' read -r key value || [ -n "$key" ]; do
+        [[ -z "$key" || "$key" =~ ^[[:space:]]*# ]] && continue
+        config["$key"]="$(echo "$value" | tr -d '\r')"
+    done < $CONFIGLOC
 
-URL="${config[URL]}"
-TOKEN="${config[TOKEN]}"
+    URL="${config[URL]}"
+    TOKEN="${config[TOKEN]}"
 fi
 
+# Check if url was provided
 if [[ -z "$URL" ]]; then
     echo "Error: No URL provided in config." >&2
     exit 1
@@ -167,21 +184,7 @@ gnomeErr() {
     echo
 }
 
-#version check
-if (( BASH_VERSINFO[0] >= 4 )); then
-    :
-else
-    echo "you do not meet the necessary requirements for"
-    echo "receiving commands so either implement it yourself lol"
-    echo "or download bash 4.0 or higher ty"
-    exit 1
-fi
 
-
-#if [ -f "$GETWMCMD" ]; then
-
-#else
-#fi
 if [[ "$XDG_CURRENT_DESKTOP" == "KDE" && "$XDG_SESSION_TYPE" == "wayland" ]];then
     if command -v kdotool >/dev/null 2>&1; then
         #echo "exists"
