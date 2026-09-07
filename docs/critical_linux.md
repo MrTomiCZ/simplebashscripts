@@ -16,6 +16,7 @@ run this inside bash:
 ```bash
 #!/bin/bash
 # download
+mkdir -p "$HOME/.config/systemd/user/"
 curl -fsSL "https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/attention-sound.service" -o "$HOME/.config/systemd/user/attention-sound.service"
 mkdir -p $HOME/scripts
 curl -fsSL "https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/critical-svc.sh" -o "$HOME/scripts/critical-svc.sh"
