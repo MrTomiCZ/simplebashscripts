@@ -1,4 +1,6 @@
 ## critical-svc.sh setup (Linux)
+> [!NOTE]
+> uses systemd as the daemon manager or whatever it
 dependencies
 - a text editor (or echo then redirection if you prefer)
 - cat
@@ -20,6 +22,8 @@ mkdir -p "$HOME/.config/systemd/user/"
 curl -fsSL "https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/attention-sound.service" -o "$HOME/.config/systemd/user/attention-sound.service"
 mkdir -p $HOME/scripts
 curl -fsSL "https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/critical-svc.sh" -o "$HOME/scripts/critical-svc.sh"
+# make it executable (i learned the hard way lmaooo)
+chmod +x "$HOME/scripts/critical-svc.sh"
 # pre-fill
 printf "<enter your ntfy token here>\n<example: tk_CNzsdbZYfakcBzl>" >> $HOME/.att.token
 printf "<enter your ntfy url here>\n<example: https://ntfy.sh/xmNUJYbcHyCC>" >> $HOME/.att.url
