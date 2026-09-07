@@ -1,6 +1,7 @@
 ## critical-svc.sh setup (Linux)
 > [!NOTE]
-> uses systemd as the daemon manager or whatever it
+> uses systemd as the daemon manager or whatever its called
+
 dependencies
 - a text editor (or echo then redirection if you prefer)
 - cat
