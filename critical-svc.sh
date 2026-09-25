@@ -20,7 +20,7 @@ ATT_SRC="https://github.com/MrTomiCZ/simplebashscripts/raw/refs/heads/main/criti
 ATT_REPO="https://github.com/MrTomiCZ/simplebashscripts"
 
 ntf() {
-    notify-send --app-name=attention-sound --icon=/usr/share/icons/breeze/status/16/data-warning.svg "$1" "$2"
+    notify-send --app-name=attention-sound --icon=/usr/share/icons/breeze/status/16/data-warning.svg -u critical "$1" "$2"
     canberra-gtk-play -f /usr/share/sounds/oxygen/stereo/message-attention.ogg &
 }
 
