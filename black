@@ -1,9 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
 cleanup() {
     tput cnorm
-    tput reset
-    tput clear
+    tput rmcup
 }
+tput smcup
 tput civis
 trap cleanup EXIT
 clear
